@@ -80,17 +80,17 @@ namespace NBXplorer.Tests
 			//Network = NBitcoin.Altcoins.Colossus.Instance.Regtest;
 			//RPCSupportSegwit = false;
 
-			//CryptoCode = "QTUM";
-			//nodeDownloadData = NodeDownloadData.Qtum.v0_18_3;
-			//NBXplorerNetwork = _Provider.GetQTUM();
+			CryptoCode = "QTUM";
+			nodeDownloadData = NodeDownloadData.Qtum.v0_18_3;
+			NBXplorerNetwork = _Provider.GetQTUM();
 
 			//CryptoCode = "LBTC";
 			//nodeDownloadData = NodeDownloadData.Elements.v0_18_1_1;
 			//NBXplorerNetwork = _Provider.GetLBTC();
 			//
-			CryptoCode = "BTC";
-			nodeDownloadData = NodeDownloadData.Bitcoin.v0_19_0_1;
-			NBXplorerNetwork = _Provider.GetBTC();
+			// CryptoCode = "BTC";
+			// nodeDownloadData = NodeDownloadData.Bitcoin.v0_19_0_1;
+			// NBXplorerNetwork = _Provider.GetBTC();
 		}
 	}
 }
