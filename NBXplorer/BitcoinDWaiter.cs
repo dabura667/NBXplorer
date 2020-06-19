@@ -10,6 +10,8 @@ using NBitcoin.Protocol;
 using System.Threading;
 using System.IO;
 using NBitcoin;
+using NBitcoin.Altcoins;
+using NBitcoin.DataEncoders;
 using System.Net;
 using NBitcoin.Protocol.Behaviors;
 using Microsoft.Extensions.Hosting;
@@ -459,6 +461,24 @@ namespace NBXplorer
 								using (var cts1 = CancellationTokenSource.CreateLinkedTokenSource(cancellation))
 								{
 									cts1.CancelAfter(loadChainTimeout);
+									// Block header 5000 and 5001 for Qtum, before and after PoS switch
+									var beforehex = "03000020cc58202ffcd1e4d8bc2c5eb06388984310487fea40f36e5d60ba6903f7560000cab605b9b204493a6ed1a0f925855ab8c6fe12064a76bcce0c0e5510b28cde056037b259ffff001f078e0000e965ffd002cd6ad0e2dc402b8044de833e06b23127ea8c3d80aec9141077149556e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b4210000000000000000000000000000000000000000000000000000000000000000ffffffff00";
+									var afterhex = "03000020cd61ced104186df1b53919ff4de141e96513291dde91bd727864e538536a00008de984d518cc059ed51f3d7e350d8b470fe2996dc4854c4169ce8badbb31bcdba038b259ffff001d00000000e965ffd002cd6ad0e2dc402b8044de833e06b23127ea8c3d80aec9141077149556e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b42133baf8505b3be2fa0062ed0384848e8929cba07f4b558d739a95b8e35e3b88780200000045304302203fcebc71fcbd050a65fa08fe38c72256b724da81d6e62915dbea2f4a051b2a32021f5f8780a88b0853894dc89c760cd30d0bb4dd74c0ae65508020e4886419bb21";
+									var bh1 = NBitcoin.Altcoins.Qtum.Instance.Mainnet.Consensus.ConsensusFactory.CreateBlockHeader();
+									var bh2 = NBitcoin.Altcoins.Qtum.Instance.Mainnet.Consensus.ConsensusFactory.CreateBlockHeader();
+									bh1.ReadWrite(Encoders.Hex.DecodeData(beforehex));
+									bh2.ReadWrite(Encoders.Hex.DecodeData(afterhex));
+									var hash1 = bh1.GetHash();
+									var hash2 = bh2.GetHash();
+									var ms = new MemoryStream();
+									BitcoinStream stream = new BitcoinStream(ms, true);
+									bh1.ReadWrite(stream);
+									var bytes = new byte[200];
+									stream.ReadWriteBytes(ref bytes);
+									var largeHex = Encoders.Hex.EncodeData(bytes);
+									Logs.Explorer.LogInformation($"{hash1}: hash1");
+									Logs.Explorer.LogInformation($"{hash2}: hash2");
+									Logs.Explorer.LogInformation($"{largeHex}: hex1");
 									Logs.Explorer.LogInformation($"{Network.CryptoCode}: Loading chain...");
 									node.SynchronizeSlimChain(_Chain, cancellationToken: cts1.Token);
 								}
