@@ -470,15 +470,10 @@ namespace NBXplorer
 									bh2.ReadWrite(Encoders.Hex.DecodeData(afterhex));
 									var hash1 = bh1.GetHash();
 									var hash2 = bh2.GetHash();
-									var ms = new MemoryStream();
-									BitcoinStream stream = new BitcoinStream(ms, true);
-									bh1.ReadWrite(stream);
-									var bytes = new byte[200];
-									stream.ReadWriteBytes(ref bytes);
-									var largeHex = Encoders.Hex.EncodeData(bytes);
+									var hexFull = Encoders.Hex.EncodeData(bh1.ToBytes());
 									Logs.Explorer.LogInformation($"{hash1}: hash1");
 									Logs.Explorer.LogInformation($"{hash2}: hash2");
-									Logs.Explorer.LogInformation($"{largeHex}: hex1");
+									Logs.Explorer.LogInformation($"{hexFull}: hex1");
 									Logs.Explorer.LogInformation($"{Network.CryptoCode}: Loading chain...");
 									node.SynchronizeSlimChain(_Chain, cancellationToken: cts1.Token);
 								}
