@@ -1,6 +1,4 @@
 ﻿#if !NOSOCKET
-using Microsoft.Extensions.Logging;
-using NBitcoin.Logging;
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -91,10 +89,7 @@ namespace NBitcoin.Protocol.Behaviors
 
 		private bool AddToChain(BlockHeader blockHeader)
 		{
-			var header = blockHeader.GetHash();
-			Logs.NodeServer.LogInformation($"header: {header}");
-			Logs.NodeServer.LogInformation($"blockHeader.HashPrevBlock: {blockHeader.HashPrevBlock}");
-			return Chain.TrySetTip(header, blockHeader.HashPrevBlock, true);
+			return Chain.TrySetTip(blockHeader.GetHash(), blockHeader.HashPrevBlock, true);
 		}
 
 		private void TrySync()
